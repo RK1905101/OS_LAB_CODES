@@ -1,0 +1,114 @@
+LAB 1 CONSISTED OF SEVERAL LINUX COMMANDS AND CHMOD COMMANDS.
+SO THAT IS NOT SPECIFIED HERE AND HENCE AFTER THAT
+MEANS FROM LAB 2 ALL THE COMMANDS ARE PRESENT
+____________________________________________________________________
+LAB-2
+
+1.WAPT TO SWAP THE VALUES OF TWO NUMBERS.
+echo "enter two numbers:"
+read a
+read b
+echo "before swapping:"
+echo a=$a
+echo b=$b
+c = $a
+a = $b
+b = c
+echo "after swapping:"
+echo a=$a
+echo b=$b
+_________________________________
+
+2.WAP TO PERFORM ADDITION SUBSTRACTION MULTIPLICATION DIVISION AND MODULUS OF TWO NUMBERS.
+read a
+read b
+add=`expr $a+$b`
+echo "sum=$add"
+diff=`expr $a-$b`
+echo "diff=$diff"
+prod=`expr $a\* $b`
+echo "product=$prod"
+div=`expr $a / $b`
+echo "division=$div"
+mod=`expr $a % $b`
+echo "modulus=$mod"
+_______________________________
+
+3.WAP TO CHECK WHETHER A NUMBER IS EVEN OR ODD.
+echo enter a number:
+read a
+check=`expr $n%2`
+if [ $check -eq 0 ]
+then
+echo $a is even
+else 
+echo $a is odd
+fi
+______________________________
+
+4.WAP TO PRINT LARGEST NUMBER AMONG THREE NUMBERS.
+echo enter first number:
+read a
+echo enter second number:
+read b
+echo enter third number:
+read c
+if [ $a -ge $b ]
+then if [ $a -ge $e ]
+then echo "$a is the greatest number"
+else echo "$c is the greatest number"
+fi
+elif [ $b-ge $c ]
+then echo "$b is the  greatest number"
+else echo "$c is the greatest number"
+fi
+______________________________
+
+5.WAP TO IMPLEMENT GRADING SYSTEM.
+echo enter marks:
+read m
+if [ $m-ge 90 ]
+then echo O GRADE
+elif [ $m-ge 80 ]
+then echo E GRADE
+elif [ $m-ge 70 ]
+then echo A GRADE
+elif [ $m-ge 60 ]
+then echo B GRADE
+elif [ $m-ge 50 ]
+then echo C GRADE
+elif [ $m-ge 40 ]
+then echo D GRADE
+else
+then echo F GRADE
+fi
+___________________________________
+
+6.WRITE A SHELL SCRIPT PROGRAM TO FIND WHETHER A GIVEN YEAR IS A LEAP YEAR OR NOT.
+
+echo enter year:
+read y
+dbf=`expr $y %4`
+dbh=`expr $y %100`
+if [ $dbf -eq 0 -a $dbh -ne 0 ]
+then echo $y is a leap year.
+else echo $y is not a leap year
+fi
+________________________________
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
