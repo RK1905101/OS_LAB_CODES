@@ -1,0 +1,87 @@
+#wap to print numbers between 1 to 10
+
+for((i=1; i<=10; i++))
+do
+echo "$i"
+done
+
+_________
+#write a shell script to display the gross salary of an employee(basic+ha+hra)
+
+read basic
+if [ $basic -lt 15000 ]
+then
+hra=`expr 10 \* $basic / 100`
+da=`expr 90 \* $basic / 100`
+else
+hra=`expr 50 \* $basic / 100`
+da=`expr 98 \* $basic / 100`
+fi
+gs=`expr $basic + $hra + $da`
+echo "Gross salary : Rs. $gs"
+_________________
+#write a shell scriot to which will accept a number and find out teh summation of square of last three digit.
+
+echo "enter a number"
+read n
+n1=`expr $n % 10`
+n=`expr $n / 10`
+n2=`expr $n % 10`
+n=`expr $n / 10`
+n3=`expr $n % 10`
+n1=`echo $n1 ^ 2 |bc`
+n2=`echo $n2 ^ 2 |bc`
+n3=`echo $n3 ^ 2 |bc`
+s=`expr $n1 + $n2 + $n3`
+echo "result $s"
+______________
+
+#shell script to calculate electricity bill.
+
+#!/bin/bash
+echo Enter units consumed:
+read units
+if [ $units -lt 100 ]
+then
+ net=`expr $units \* 2 + 25`
+ echo Net amount is Rs.$net
+else
+ net=`expr $units \* 3 + 25`
+ echo Net amount is Rs.$net
+
+_________
+
+#!/bin/bash
+emp=1
+while [ $emp -le 10 ]
+do
+echo enter working hours:
+read hours
+if [ $hours -gt 40 ]
+then
+otpay=`expr \($hours -40 \) \* 12`
+echo over time pay=Rs. $otpay
+else
+echo no over time pay
+fi
+emp=`expr $emp+1`
+done
+
+______________
+echo enter n:
+read n
+s=0
+if [ $n -ge 0 ]
+then
+while [ $n -ne 0 ]
+do
+sq=`expr $n \* $n`
+s=`expr $n + $sq`
+n=`expr $n - 1`
+done
+echo $s
+else
+echo invalid case
+fi
+
+__________________
