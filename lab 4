@@ -1,0 +1,256 @@
+24 th Feb 2021
+
+Q1.Write a shell script to display the alternate digits in a given
+seven digits number starting first digit.
+CODE:
+echo &quot;Enter a seven digit number&quot;
+read n
+if [ $n -ge 1000000 -a $n -le 9999999 ]
+then
+d1=`expr $n / 1000000`
+d3=`expr $n / 10000`
+d3=`expr $d3 % 10`
+d5=`expr $n / 100`
+d5=`expr $d5 % 10`
+d7=`expr $n % 10`
+echo &quot;Alternate digits are:&quot;
+echo $d1
+echo $d3
+echo $d5
+echo $d7
+else
+echo &quot;This is not a seven digit number&quot;
+fi
+------------------------------------------------------------------------------------
+Q2.Write a shell script to print all the even odd number from
+0-100
+CODE:
+echo &quot;Even numbers between 1 and 100 are :&quot;
+i=2
+while [ $i -le 100 ]
+do
+
+echo $i
+i=`expr $i + 2`
+done
+echo &quot;Odd numbers between 1 and 100 are :&quot;
+i=1
+while [ $i -le 99 ]
+do
+echo $i
+i=`expr $i + 2`
+done
+------------------------------------------------------------------------------------
+Q3.write a shell script to print factorial of a given number.
+CODE:
+echo &quot;Enter a number&quot;
+read n
+fact=1
+i=2
+while [ $i -le $n ]
+do
+fact=`expr $fact \* $i`
+i=`expr $i + 1`
+done
+echo &quot;Factorial of $n = $fact&quot;
+------------------------------------------------------------------------------------
+Q4.write a shell script to print fibonacci series starting from 0.
+CODE:
+echo &quot;Enter number of terms&quot;
+read n
+t1=0
+t2=1
+i=1
+echo &quot;Fibonacci series upto $n terms is:&quot;
+while [ $i -le $n ]
+
+do
+echo $t1
+prev=$t1
+t1=$t2
+t2=`expr $t2 + $prev`
+i=`expr $i + 1`
+done
+------------------------------------------------------------------------------------
+Q5.write a shell script to print a number in reverse order and
+calculate its sum of its digits.
+CODE:
+echo &quot;Enter a number&quot;
+read n
+s=0
+r=0
+i=$n
+while [ $i -ne 0 ]
+do
+d=`expr $i % 10`
+s=`expr $s + $d`
+r=`expr $r \* 10`
+r=`expr $r + $d`
+i=`expr $i / 10`
+done
+echo &quot;Reverse = $r&quot;
+echo &quot;Sum of digits = $s&quot;
+------------------------------------------------------------------------------------
+Q6.write a shell script to find(check whether) palindrome
+numbers in a given range.
+CODE:
+echo &quot;Enter lower limit&quot;
+read ll
+echo &quot;Enter upper limit&quot;
+
+read ul
+i=$ll
+echo &quot;Palindrome numbers in the given range are:&quot;
+while [ $i -le $ul ]
+do
+r=0
+j=$i
+while [ $j -ne 0 ]
+do
+d=`expr $j % 10`
+r=`expr $r \* 10`
+r=`expr $r + $d`
+j=`expr $j / 10`
+done
+if [ $r -eq $i ]
+then echo $i
+fi
+i=`expr $i + 1`
+done
+------------------------------------------------------------------------------------
+Q7.write a shell script to print the prime numbers in a given
+range
+CODE:
+echo &quot;Enter lower limit&quot;
+read ll
+echo &quot;Enter upper limit&quot;
+read ul
+i=$ll
+echo &quot;Prime numbers in the given range are:&quot;
+while [ $i -le $ul ]
+do
+j=2
+flag=0
+while [ $j -lt $i ]
+
+do
+rem=`expr $i % $j`
+if [ $rem -eq 0 ]
+then
+flag=1
+break
+fi
+j=`expr $j + 1`
+done
+if [ $flag -eq 0 -a $i -ne 1 ]
+then echo $i
+fi
+i=`expr $i + 1`
+done
+------------------------------------------------------------------------------------
+Q8.write a shell script to find(check whether) Armstrong
+numbers in a given range.
+CODE:
+echo &quot;Enter lower limit&quot;
+read ll
+echo &quot;Enter upper limit&quot;
+read ul
+i=$ll
+echo &quot;Armstrong numbers in the given range are:&quot;
+while [ $i -le $ul ]
+do
+j=$i
+s=0
+while [ $j -ne 0 ]
+do
+d=`expr $j % 10`
+c=`expr $d \* $d \* $d`
+s=`expr $s + $c`
+j=`expr $j / 10`
+
+done
+if [ $s -eq $i ]
+then echo $i
+fi
+i=`expr $i + 1`
+done
+------------------------------------------------------------------------------------
+Q9.write a shell script to convert decimal number to a binary
+number
+CODE:
+echo &quot;Enter decimal number&quot;
+read d
+i=$d
+pos=0
+while [ $i -ne 0 ]
+do
+b[$pos]=`expr $i % 2`
+pos=`expr $pos + 1`
+i=`expr $i / 2`
+done
+echo &quot;Binary equivalent of the number is:&quot;
+i=`expr $pos - 1`
+while [ $i -ge 0 ]
+do
+echo -n ${b[$i]}
+i=`expr $i - 1`
+done
+echo &quot;&quot;
+------------------------------------------------------------------------------------
+Q10.wap to implement grading system
+CODE:
+echo &quot;Student Mark List&quot;
+
+echo Enter the Student name
+read name
+echo Enter the Register number
+read rno
+echo Enter the Mark1
+read m1
+echo Enter the Mark2
+read m2
+echo Enter the Mark3
+read m3
+echo Enter the Mark4
+read m4
+echo Enter the Mark5
+read m5
+tot=$(expr $m1 + $m2 + $m3 + $m4 + $m5)
+avg=$(expr $tot / 5)
+echo &quot;Student Name : $name&quot;
+echo &quot;Register Number : $rno&quot;
+echo &quot;Mark1 : $m1&quot;
+echo &quot;Mark2 : $m2&quot;
+echo &quot;Mark3 : $m3&quot;
+echo &quot;Mark4 : $m4&quot;
+echo &quot;Mark5 : $m5&quot;
+echo &quot;Total : $tot&quot;
+echo &quot;Average : $avg&quot;
+if [ $m1 -ge 35 ] &amp;&amp; [ $m2 -ge 35 ] &amp;&amp; [ $m3 -ge 35 ] &amp;&amp; [ $m4 -
+ge 35 ] &amp;&amp; [ $m5 -ge 35 ]
+then
+echo &quot;Result : Pass&quot;
+if [ $avg -ge 90 ]
+then
+echo &quot;Grade : S&quot;
+elif [ $avg -ge 80 ]
+
+then
+echo &quot;Grade : A&quot;
+elif [ $avg -ge 70 ]
+then
+echo &quot;Grade : B&quot;
+elif [ $avg -ge 60 ]
+then
+echo &quot;Grade : C&quot;
+elif [ $avg -ge 50 ]
+then
+echo &quot;Grade : D&quot;
+elif [ $avg -ge 35 ]
+then
+echo &quot;Grade : E&quot;
+fi
+else
+echo &quot;Result : Fail&quot;
+fi
+---------------------------
