@@ -1,0 +1,157 @@
+3RD MARCH 2021
+
+Question:Write a program in c to schedule cpu using fcfs
+concept.
+CODE:
+#include&lt;stdio.h&gt;
+#include&lt;stdlib.h&gt;
+struct process
+{
+int pid,at;
+struct process *next;
+
+}*current;
+void add_process(int p,int a)
+{
+struct process New=(struct process)malloc(sizeof(struct
+process));
+struct process *temp=current;
+New-&gt;pid=p;
+New-&gt;at=a;
+New-&gt;next=NULL;
+if(current==NULL)
+{
+current=New;
+}
+else
+{
+while(temp-&gt;next!=NULL)
+{
+temp=temp-&gt;next;
+}
+temp-&gt;next=New;
+}
+}
+void remove_process(int p)
+{
+struct process *temp=current;
+struct process *prev=current;
+int found=0;
+while(temp!=NULL)
+{
+if(temp-&gt;pid==p)
+{
+found=1;
+if(temp==current)
+
+{
+current=current-&gt;next;
+free(temp);
+temp=current;
+}
+else
+{
+prev-&gt;next=temp-&gt;next;
+free(temp);
+temp=prev;
+}
+}
+prev=temp;
+temp=temp-&gt;next;
+}
+if(found==0)
+{
+printf(&quot;Element not found\n&quot;);
+}
+}
+void display()
+{
+struct process *temp=current;
+printf(&quot;PID\tArrival Time\n&quot;);
+while(temp!=NULL)
+{
+printf(&quot;%d\t%d\n&quot;,temp-&gt;pid,temp-&gt;at);
+temp=temp-&gt;next;
+}
+}
+void fcfs()
+{
+struct process *temp=current;
+
+struct process *t,*soonest;
+int tp,ta;
+while(temp!=NULL)
+{
+t=temp;
+soonest=temp;
+while(t!=NULL)
+{
+if((t-&gt;at)&lt;(soonest-&gt;at))
+{
+soonest=t;
+}
+t=t-&gt;next;
+}
+tp=temp-&gt;pid;
+ta=temp-&gt;at;
+temp-&gt;pid=soonest-&gt;pid;
+temp-&gt;at=soonest-&gt;at;
+soonest-&gt;pid=tp;
+soonest-&gt;at=ta;
+temp=temp-&gt;next;
+}
+while(current!=NULL)//removes processes one-by-one,
+completing fcfs
+{
+printf(&quot;Process #%d is executing\n&quot;,current-&gt;pid);
+temp=current;
+current=current-&gt;next;
+free(temp);
+}
+}
+int main()
+{
+int choice=1,p,a;
+
+while(choice!=0)
+{
+printf(&quot;Enter:\n\t1 to add a process to the list\n\t2
+to remove a process from the list\n\t3 to display process
+list\n\t4 to start FCFS schedule\n\t0 to EXIT\n&quot;);
+
+scanf(&quot;%d&quot;,&amp;choice);
+switch(choice)
+{
+case 1:
+printf(&quot;Enter PID : &quot;);
+scanf(&quot;%d&quot;,&amp;p);
+printf(&quot;\nEnter Arrival Time : &quot;);
+scanf(&quot;%d&quot;,&amp;a);
+printf(&quot;\n&quot;);
+add_process(p,a);
+break;
+case 2:
+printf(&quot;Enter PID : &quot;);
+scanf(&quot;%d&quot;,&amp;p);
+printf(&quot;\n&quot;);
+remove_process(p);
+break;
+case 3:
+printf(&quot;Current process list is:\n&quot;);
+display();
+break;
+case 4:
+printf(&quot;Starting FCFS :\n&quot;);
+fcfs();
+break;
+case 0:
+printf(&quot;EXITING\n&quot;);
+break;
+default:
+printf(&quot;Invalid Choice\n&quot;);
+
+}
+}
+return 0;
+}
+_________________________
