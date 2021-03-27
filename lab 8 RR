@@ -1,0 +1,58 @@
+ÇPU scheduling USING ROUND ROBIN.
+
+
+//Round Robin scheduling algo
+
+#include<stdio.h>
+int main()
+{
+int at[10],bt[10],rt[10],i,ts,at_p[10],pname[10],wt[10];
+int remain=0,n,time,l,count;
+printf("enter the number of process:");
+scanf("%d",&n);
+printf("enter time slice:");
+scanf("%d",&ts);
+for(i=0;i<n;i++)
+{
+printf("\n enter arrival time for process p%d:",i);
+scanf("%d",&at[i]);
+pname[i]=i;
+at_p[i]=at[i];
+printf("\n enter burst time for process p%d:",i);
+scanf("%d",&bt[i]);
+rt[i]=bt[i];
+wt[i]=0;
+}
+printf("\n\n Process\t Arrival Time \t Turn Around Time\t  Waiting Time\t Completion Time\n\n");
+at_p[9]=9999;
+for(time=0;remain!=n;)
+{
+l=9;
+for(i=0;i<n;i++)
+{
+if(rt[i]>0 && at_p[i]<at_p[l])
+l=i;
+}
+if(rt[l]>ts)
+{
+rt[l]=rt[l]-ts;
+wt[l]=wt[l]+time-at_p[l];
+time=time+ts;
+at_p[l]=time;
+}
+else if(rt[l]<=ts)
+{
+wt[l]=wt[l]+time-at_p[l];
+time=rt[l]+time;
+at_p[l]=time;
+rt[l]=0;
+count=1;
+}
+if(rt[l]==0 && count==1)
+{
+printf("\n p[%d]\t %d\t\t %d\t\t %d\t\t %d\t\t %d\t\t",l,at[l],bt[l],wt[l]+bt[l],wt[l],at_p[l] );
+remain++;
+count=0;
+}
+}
+}
