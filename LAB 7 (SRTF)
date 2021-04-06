@@ -1,0 +1,290 @@
+                         SRTF ALGO
+#include<stdio.h>  
+void main()  
+{  
+  
+    int i, n, sum=0,count=0, y, q, wt=0, tat=0, at[10], bt[10], temp[10];  
+    float avg_wt, avg_tat;  
+    printf(" Total number of process in the system: ");  
+    scanf("%d", &n);  
+    y = n; 
+   
+for(i=0; i<n; i++)  
+{  
+printf("\n Enter the Arrival and Burst time of the Process[%d]\n", i+1);  
+printf(" Arrival time is: \t");  
+scanf("%d", &at[i]);  
+printf(" \nBurst time is: \t");  
+scanf("%d", &bt[i]);  
+temp[i] = bt[i]; 
+}  
+
+printf("Enter the Time Quantum for the process: \t");  
+scanf("%d", &q);  
+  
+printf("\n Process No \t\t Burst Time \t\t TAT \t\t Waiting Time ");  
+for(sum=0, i = 0; y!=0; )  
+{  
+if(temp[i] <= q && temp[i] > 0)   
+{  
+    sum = sum + temp[i];  
+    temp[i] = 0;  
+    count=1;  
+    }     
+    else if(temp[i] > 0)  
+    {  
+        temp[i] = temp[i] - q;  
+        sum = sum + q;    
+    }  
+    if(temp[i]==0 && count==1)  
+    {  
+        y--;  
+        printf("\nProcess No[%d] \t\t %d\t\t\t\t %d\t\t\t %d", i+1, bt[i], sum-at[i], sum-at[i]-bt[i]);  
+        wt = wt+sum-at[i]-bt[i];  
+        tat = tat+sum-at[i];  
+        count =0;     
+    }  
+    if(i==n-1)  
+    {  
+        i=0;  
+    }  
+    else if(at[i+1]<=sum)  
+    {  
+        i++;  
+    }  
+    else  
+    {  
+        i=0;  
+    }  
+}  
+avg_wt = wt * 1.0/n;  
+avg_tat = tat * 1.0/n;  
+printf("\n Average Turn Around Time: \t%f", avg_wt);  
+printf("\n Average Waiting Time: \t%f", avg_tat);  
+}  
+---------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------
+                                            SRTF ALGO USING LINED LIST
+                                           
+#include<stdio.h>
+#include<stdlib.h>
+struct process
+{
+int pid,at,bt,rem,ct,wt,rt,tat;
+struct process *next;
+}*current;
+void add_process(int p,int a,int b)
+{
+struct process *New=(struct process*)malloc(sizeof(struct process));
+struct process *temp=current;
+New->pid=p;
+New->at=a;
+New->bt=b;
+New->rem=b;
+New->next=NULL;
+if(current==NULL)
+{
+current=New;
+}
+else
+{
+while(temp->next!=NULL)
+{
+temp=temp->next;
+}
+temp->next=New;
+}
+}
+void remove_process(int p)
+{struct process *temp=current;
+struct process *prev=current;
+int found=0;
+while(temp!=NULL)
+{
+if(temp->pid==p)
+{
+found=1;
+if(temp==current)
+{
+current=current->next;
+free(temp);
+temp=current;
+}
+else
+{
+prev->next=temp->next;
+free(temp);
+temp=prev;
+}
+}
+prev=temp;
+temp=temp->next;
+}
+if(found==0)
+{
+printf("Process not found\n");
+}
+}
+void display()
+{
+struct process *temp=current;
+printf("PID\tArrival Time\tBurst Time\n");
+while(temp!=NULL){
+printf("%d\t%d\t%d\n",temp->pid,temp->at,temp->bt);
+temp=temp->next;
+}
+}
+void sort_arr()
+{
+struct process *temp=current;
+struct process *t,*soonest;
+int tp,ta,tb,trem,tr;
+while(temp!=NULL)
+{
+t=temp;
+soonest=temp;
+while(t!=NULL)
+{
+if(t->at < soonest->at)
+{
+soonest=t;
+}
+t=t->next;
+}
+tp=temp->pid;
+ta=temp->at;
+tb=temp->bt;
+tr=temp->rt;
+trem=temp->rem;
+temp->pid=soonest->pid;
+temp->at=soonest->at;
+temp->bt=soonest->bt;
+temp->rt=soonest->rt;
+temp->rem=soonest->rem;
+soonest->pid=tp;
+soonest->at=ta;soonest->bt=tb;
+soonest->rt=tr;
+soonest->rem=trem;
+temp=temp->next;
+}
+}
+void sort_rem(int time)
+{
+struct process *temp=current;
+struct process *t,*shortest;
+int tp,ta,tb,trem,tr;
+while(temp!=NULL)
+{
+t=temp;
+shortest=temp;
+while(t!=NULL)
+{
+if(((t->rem)<(shortest->rem)) && ((t->at) <= time))
+{
+shortest=t;
+}
+t=t->next;
+}
+tp=temp->pid;
+ta=temp->at;
+tb=temp->bt;
+tr=temp->rt;
+trem=temp->rem;
+temp->pid=shortest->pid;
+temp->at=shortest->at;
+temp->bt=shortest->bt;
+temp->rt=shortest->rt;
+temp->rem=shortest->rem;
+shortest->pid=tp;shortest->at=ta;
+shortest->bt=tb;
+shortest->rt=tr;
+shortest->rem=trem;
+temp=temp->next;
+}
+}
+void srtf()
+{
+struct process *temp;
+int time=0,n=0;
+float awt=0,atat=0;
+printf("PID\tAT\tBT\tCT\tTAT\tWT\tRT\n");
+sort_arr();
+while(current!=NULL)//removes processes one-by-one, completing
+fcfs
+{
+sort_rem(time);
+time++;
+if(current->at <= time)
+{
+if(current->rem == current->bt)
+{
+current->rt= time - (current->at) - 1;
+}
+current->rem=current->rem - 1;
+if(current->rem == 0)
+{
+current->ct=time;
+current->tat=(current->ct)-(current->at);
+current->wt=(current->tat)-(current->bt);
+awt += current->wt;
+atat += current->tat;n++;
+printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\n",current->pid,current->at,current->b
+t,current->ct,current->tat,current->wt,current->rt);
+temp=current;
+current=current->next;
+free(temp);
+}
+}
+else
+{
+time++;
+}
+}
+awt /= n;
+atat /= n;
+printf("Avg. Waiting Time=%.2f\nAvg. Turnaround
+Time=%.2f\n",awt,atat);
+}
+int main()
+{
+int choice=1,p,a,b;
+while(choice!=0)
+{
+printf("Enter:\n\t1 to add a process to the list\n\t2 to remove a
+process from the list\n\t3 to display process list\n\t4 to start SRTF
+schedule\n\t0 to EXIT\n");
+scanf("%d",&choice);
+switch(choice)
+{
+case 1:printf("Enter PID : ");
+scanf("%d",&p);
+printf("\nEnter Arrival Time : ");
+scanf("%d",&a);
+printf("Enter Burst Time : ");
+scanf("%d",&b);
+printf("\n");
+add_process(p,a,b);
+break;
+case 2:
+printf("Enter PID : ");
+scanf("%d",&p);
+printf("\n");
+remove_process(p);
+break;
+case 3:
+printf("Current process list is:\n");
+display();
+break;
+case 4:
+printf("Starting SRTF schedule :\n");
+srtf();
+break;
+case 0:
+printf("EXITING\n");
+break;
+default:
+printf("Invalid Choice\n");
+}
+}
+return 0;
+} 
