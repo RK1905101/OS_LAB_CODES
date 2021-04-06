@@ -1,0 +1,603 @@
+                                                       NON PREEMPTIVE PRIORITY SCHEDULING                 
+
+
+#include <stdio.h>
+int main()
+{
+ 
+     int bt[20],wt[20],p[20],tat[20],priority[20];
+     float avwt=0,avtat=0;
+ 
+     int i,j,n,temp,key;
+ 
+     printf("\nEnter the number of the processes: ");
+     scanf("%d",&n);
+     for(i=0;i<n;i++)
+     {
+        printf("\nEnter BurstTime & Priority of P%d: ",i+1);
+ 
+        scanf("%d",&bt[i]);
+        scanf("%d",&priority[i]);
+        p[i]=i;
+     }
+
+     for(i=0;i<n;i++)
+     {
+        key=i;
+        for(j=i+1;j<n;j++)
+        {
+           if(priority[j]<priority[key])
+           {
+              key=j;
+           }
+        }
+        temp=bt[i];
+        bt[i]=bt[key];
+        bt[key]=temp;
+
+        temp=priority[i];
+        priority[i]=priority[key];
+        priority[key]=temp;
+
+        temp=p[i];
+        p[i]=p[key];
+        p[key]=temp;
+     }
+ 
+     wt[0]=0;
+     tat[0]=bt[0];
+     avtat=tat[0];
+ 
+     for(i=1;i<n;i++)
+     {
+           wt[i]=wt[i-1]+bt[i-1];
+ 
+           tat[i]=tat[i-1]+bt[i];
+ 
+           avwt+=wt[i];
+               
+           avtat+=tat[i];
+     }
+ 
+     avwt=avwt/n;
+     avtat=avtat/n;
+ 
+     printf("\n\nPROCESS\t\twaiting time\tburst time\tTurnaround time\n\n");
+ 
+     for(i=0;i<n;i++)
+     {
+           printf("P%d\t\t%d\t\t%d\t\t%d\n",p[i],wt[i],bt[i],tat[i]);
+     }
+ 
+     printf("\n\nAverage waiting time: %.2f",avwt);
+     printf("\n\nAverage Turn around time is: %.2f",avtat);
+     printf("\n");
+ 
+     return 0;
+}
+
+____________________________________________________________________________________________________________
+____________________________________________________________________________________________________________
+
+                                              NON-PREEMPTIVE PRIORITY SCHEDULING USING LINKED LIST
+
+#include<stdio.h>
+#include<stdlib.h>
+struct process
+{
+int pid,at,bt,priority,ct,wt,tat;
+struct process *next;
+}*current;
+void add_process(int p,int a,int b,int pr)
+{
+struct process *New=(struct process*)malloc(sizeof(struct process));
+struct process *temp=current;
+New->pid=p;
+New->at=a;
+New->bt=b;
+New->priority=pr;
+New->next=NULL;
+if(current==NULL)
+{
+current=New;
+}
+else
+{
+while(temp->next!=NULL)
+{
+temp=temp->next;
+}
+temp->next=New;
+}
+}
+void remove_process(int p){
+struct process *temp=current;
+struct process *prev=current;
+int found=0;
+while(temp!=NULL)
+{
+if(temp->pid==p)
+{
+found=1;
+if(temp==current)
+{
+current=current->next;
+free(temp);
+temp=current;
+}
+else
+{
+prev->next=temp->next;
+free(temp);
+temp=prev;
+}
+}
+prev=temp;
+temp=temp->next;
+}
+if(found==0)
+{
+printf("Process not found\n");
+}
+}
+void display()
+{
+struct process *temp=current;
+printf("PID\tArrival Time\tBurst Time\tPriority\n");while(temp!=NULL)
+{
+printf("%d\t%d\t\t%d\t\t%d\n",temp->pid,temp->at,temp->bt,temp->priority);
+temp=temp->next;
+}
+}
+void sort_at()
+{
+struct process *temp=current;
+struct process *t,*highest,*soonest;
+int tp,ta,tb,tpr;
+while(temp!=NULL)
+{
+t=temp;
+highest=temp;
+while(t!=NULL)
+{
+if((t->at)<(highest->at))
+{
+highest=t;
+}
+t=t->next;
+}
+tp=temp->pid;
+ta=temp->at;
+tb=temp->bt;
+tpr=temp->priority;
+temp->pid=highest->pid;
+temp->at=highest->at;
+temp->bt=highest->bt;
+temp->priority=highest->priority;
+highest->pid=tp;
+highest->at=ta;highest->bt=tb;
+highest->priority=tpr;
+temp=temp->next;
+}
+}
+void sort_priority(int time)
+{
+struct process *temp=current;
+struct process *t,*highest,*soonest;
+int tp,ta,tb,tpr;
+while(temp!=NULL)
+{
+t=temp;
+highest=temp;
+while(t!=NULL)
+{
+if((t->priority)>(highest->priority)&&(t->at <= time))
+{
+highest=t;
+}
+t=t->next;
+}
+tp=temp->pid;
+ta=temp->at;
+tb=temp->bt;
+tpr=temp->priority;
+temp->pid=highest->pid;
+temp->at=highest->at;
+temp->bt=highest->bt;
+temp->priority=highest->priority;
+highest->pid=tp;
+highest->at=ta;
+highest->bt=tb;
+highest->priority=tpr;temp=temp->next;
+}
+}
+void npps()
+{
+struct process *temp=current;
+int n=0;
+float awt=0,atat=0;
+int time=0;
+sort_at();
+printf("PID\tAT\tBT\tPriority\tCT\tTAT\tWT\n");
+while(current!=NULL)
+{
+sort_priority(time);
+if(current->at <= time)
+{
+time+=current->bt;
+current->ct=time;
+current->tat=(current->ct) - (current->at);
+current->wt=(current->tat) - (current->bt);
+awt += current->wt;
+atat += current->tat;
+n++;
+printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\n",current->pid,current->at,current->b
+t,current->priority,current->ct,current->tat,current->wt);
+temp=current;
+current=current->next;
+free(temp);
+}
+else
+{time++;
+}
+}
+atat /= n;
+awt /= n;
+printf("Avg. Waiting Time = %.2f\nAvg. Turnaround Time =
+%.2f\n",awt,atat);
+}
+int main()
+{
+int choice=1,p,a,b,pr;
+while(choice!=0)
+{
+printf("Enter:\n\t1 to add a process to the list\n\t2 to remove a
+process from the list\n\t3 to display process list\n\t4 to start
+Non-Preemptive Priority schedule\n\t0 to EXIT\n");
+scanf("%d",&choice);
+switch(choice)
+{
+case 1:
+printf("Enter PID : ");
+scanf("%d",&p);
+printf("\nEnter Arrival Time : ");
+scanf("%d",&a);
+printf("Enter Burst Time : ");
+scanf("%d",&b);
+printf("Enter Priority : ");
+scanf("%d",&pr);
+printf("\n");
+add_process(p,a,b,pr);
+break;
+case 2:printf("Enter PID : ");
+scanf("%d",&p);
+printf("\n");
+remove_process(p);
+break;
+case 3:
+printf("Current process list is:\n");
+display();
+break;
+case 4:
+printf("Starting Scheduling :\n");
+npps();
+break;
+case 0:
+printf("EXITING\n");
+break;
+default:
+printf("Invalid Choice\n");
+}
+}
+return 0;
+}
+
+
+____________________________________________________________________________________________________________
+____________________________________________________________________________________________________________
+
+                                              PREEMPTIVE PRIORITY SCHEDULING 
+#include<stdio.h>
+#define max 30
+void main()
+{
+    int i,n,j,t,bt[max],wt[max],pr[max],tat[max],pos;
+    float awt=0,atat=0;
+    
+    printf("enter no of process");
+    scanf("%d",&n);
+    printf("enter burst time of processes");
+    for(i=0;i<n;i++)
+    {
+        scanf("%d",&bt[i]);
+        
+    }
+    
+     printf("enter priority of processes");
+    for(i=0;i<n;i++)
+    {
+        scanf("%d",&pr[i]);
+        
+    }
+    
+    for(i=0;i<n;i++)
+    {
+        pos=i;
+        for(j=i+1;j<n;j++)
+        {
+            if(pr[j]<pr[pos])
+            {
+                pos=j;
+                
+            }
+            
+        }
+        t=pr[i];
+        pr[i]=pr[pos];
+        pr[pos]=t;
+        
+        t=bt[i];
+        bt[i]=bt[pos];
+        bt[pos]=t;
+        
+    }
+    
+    wt[0]=0;
+    printf("process\t burst time \t priority\t waiting time \t turn around time\n");
+    for(i=0;i<n;i++)
+    {
+        wt[i]=0;
+        tat[i]=0;
+        for(j=0;j<i;j++)
+        {
+            wt[i]=wt[i]+bt[j];
+            
+        }
+        
+        tat[i]=wt[i]+bt[i];
+        awt=awt+wt[i];
+        atat=atat+tat[i];
+        
+        printf("%d\t%d\t\t%d\t\t%d\t\t%d\n",i+1,bt[i],pr[i],wt[i],tat[i]);
+        
+    }
+    
+    
+    awt=awt/n;
+    atat=atat/n;
+    printf("average waiting time is:%f\n",awt);
+    printf("average turn around time is: %f\n",atat);
+    
+ }
+____________________________________________________________________________________________________________
+____________________________________________________________________________________________________________
+
+                                              PREEMPTIVE PRIORITY SCHEDULING USING LINKED LIST
+                                              
+#include<stdio.h>
+#include<stdlib.h>
+struct process
+{
+int pid,at,bt,priority,rem,ct,wt,rt,tat;
+struct process *next;
+}*current;
+void add_process(int p,int a,int b,int pr)
+{
+struct process *New=(struct process*)malloc(sizeof(struct process));
+struct process *temp=current;
+New->pid=p;
+New->at=a;
+New->bt=b;
+New->rem=b;
+New->priority=pr;
+New->next=NULL;
+if(current==NULL)
+{
+current=New;
+}
+else
+{
+while(temp->next!=NULL)
+{
+temp=temp->next;
+}
+temp->next=New;
+}
+}void remove_process(int p)
+{
+struct process *temp=current;
+struct process *prev=current;
+int found=0;
+while(temp!=NULL)
+{
+if(temp->pid==p)
+{
+found=1;
+if(temp==current)
+{
+current=current->next;
+free(temp);
+temp=current;
+}
+else
+{
+prev->next=temp->next;
+free(temp);
+temp=prev;
+}
+}
+prev=temp;
+temp=temp->next;
+}
+if(found==0)
+{
+printf("Process not found\n");
+}
+}
+void display()
+{
+struct process *temp=current;
+printf("PID\tArrival Time\tBurst Time\tPriority\n");while(temp!=NULL)
+{
+printf("%d\t%d\t%d\t%d\n",temp->pid,temp->at,temp->bt,temp->priority);
+temp=temp->next;
+}
+}
+void sort_arr()
+{
+struct process *temp=current;
+struct process *t,*soonest;
+int tp,ta,tb,trem,tr;
+while(temp!=NULL)
+{
+t=temp;
+soonest=temp;
+while(t!=NULL)
+{
+if(t->at < soonest->at)
+{
+soonest=t;
+}
+t=t->next;
+}
+tp=temp->pid;
+ta=temp->at;
+tb=temp->bt;
+tr=temp->rt;
+trem=temp->rem;
+temp->pid=soonest->pid;
+temp->at=soonest->at;
+temp->bt=soonest->bt;
+temp->rt=soonest->rt;
+temp->rem=soonest->rem;soonest->pid=tp;
+soonest->at=ta;
+soonest->bt=tb;
+soonest->rt=tr;
+soonest->rem=trem;
+temp=temp->next;
+}
+}
+void sort_pr(int time)
+{
+struct process *temp=current;
+struct process *t,*highest;
+int tp,ta,tb,trem,tpr,tr;
+while(temp!=NULL)
+{
+t=temp;
+highest=temp;
+while(t!=NULL)
+{
+if(((t->priority)>(highest->priority)) && ((t->at) <= time))
+{
+highest=t;
+}
+t=t->next;
+}
+tp=temp->pid;
+ta=temp->at;
+tb=temp->bt;
+tr=temp->rt;
+tpr=temp->priority;
+trem=temp->rem;
+temp->pid=highest->pid;
+temp->at=highest->at;
+temp->bt=highest->bt;temp->rt=highest->rt;
+temp->rem=highest->rem;
+temp->priority=highest->priority;
+highest->pid=tp;
+highest->at=ta;
+highest->bt=tb;
+highest->rt=tr;
+highest->rem=trem;
+highest->priority=tpr;
+temp=temp->next;
+}
+}
+void pps()
+{
+struct process *temp;
+int time=0,n=0;
+float awt=0,atat=0;
+printf("PID\tAT\tBT\tPriority\tCT\tTAT\tWT\tRT\n");
+sort_arr();
+while(current!=NULL)//removes processes one-by-one, completing
+fcfs
+{
+sort_pr(time);
+time++;
+if(current->at <= time)
+{
+if(current->rem == current->bt)
+{
+current->rt= time - (current->at) - 1;
+}
+current->rem=current->rem - 1;
+if(current->rem == 0)
+{
+current->ct=time;current->tat=(current->ct)-(current->at);
+current->wt=(current->tat)-(current->bt);
+awt += current->wt;
+atat += current->tat;
+n++;
+printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n",current->pid,current->at,curre
+nt->bt,current->priority,current->ct,current->tat,current->wt,current->rt);
+temp=current;
+current=current->next;
+free(temp);
+}
+}
+else
+{
+time++;
+}
+}
+awt /= n;
+atat /= n;
+printf("Avg. Waiting Time=%.2f\nAvg. Turnaround
+Time=%.2f\n",awt,atat);
+}
+int main()
+{
+int choice=1,p,a,b,pr;
+while(choice!=0)
+{printf("Enter:\n\t1 to add a process to the list\n\t2 to remove a
+process from the list\n\t3 to display process list\n\t4 to start Preemptive
+Priority schedule\n\t0 to EXIT\n");
+scanf("%d",&choice);
+switch(choice)
+{
+case 1:
+printf("Enter PID : ");
+scanf("%d",&p);
+printf("\nEnter Arrival Time : ");
+scanf("%d",&a);
+printf("Enter Burst Time : ");
+scanf("%d",&b);
+printf("Enter priority : ");
+scanf("%d",&pr);
+printf("\n");
+add_process(p,a,b,pr);
+break;
+case 2:
+printf("Enter PID : ");
+scanf("%d",&p);
+printf("\n");
+remove_process(p);
+break;
+case 3:
+printf("Current process list is:\n");
+display();
+break;
+case 4:
+printf("Starting scheduling :\n");
+pps();
+break;
+case 0:
+printf("EXITING\n");
+break;default:
+printf("Invalid Choice\n");
+}
+}
+return 0;
+}
