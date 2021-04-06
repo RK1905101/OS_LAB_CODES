@@ -1,8 +1,9 @@
 3RD MARCH 2021
 
-Question:Write a program in c to schedule cpu using fcfs
-concept.
+Question:Write a program in c to schedule cpu using fcfs concept.
+
 CODE:
+
 #include&lt;stdio.h&gt;
 #include&lt;stdlib.h&gt;
 struct process
