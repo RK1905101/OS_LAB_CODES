@@ -1,0 +1,65 @@
+LINUX SHELL COMMANDS:
+
+
+cal:    | to display calender
+pwd:    | to display path of directory
+cd:     |navigation through directories and files and go to straight home folder.
+cd..    | to move one directory up
+cd-     |to go to straight home folder
+cd~     | return to home directory
+ls -l   |  list out files or sub directories
+ls -r   | list out sub directories
+ls -a   | list hidden files
+ls -al  | list out directoies eith details
+whoami  | to find current user of the system.
+who     |  to know who is logged in.
+w       | list currently logged in user
+vi <file_name>             | to create a file in unix system
+cat <file_name>            | to display content of a file.
+touch <file_name>          | creates blank new file through cmd line.
+wc <file_name>             | to get count of total no. of lines and words.
+head -n <file_name>        | to display first 10 line of a file.
+tail -n <file_name>        | to display last 10 lines of a file.
+diff <file_1><file_2>      | to display and compare content of two files line by line.
+cp source_file dest_file>  | to copy file 
+mv source_file dest_file   | to change name of the file.
+rm <file_name>  | to delete existing file.
+man cmd_name    | to show manual instruction o fany cmd.
+history         | to show up all previously used cmd.
+clear           | to clear clutter in the terminal.
+echo "text"     |prints string of text in the terminal.
+exit            | closes terminal 
+grep <word> <file name>  | to find a particular word from a certain file.
+ps          |lists all running process.
+ps -u dave  |to display all the process related to a user.
+ps -e       | to display every process that is running.
+sudo apt-get install <package name>  |to install required package in unix system.
+sudo apt-get update                  | to update all the installed packages
+shutdown                             | shut downs system with no parameter
+shutdown now                         | shuts down immediately
+mkdir <dir_name>  | to create new directory.
+rmdir <dir_name>  | to remove/delete a file.
+rm -rf<dir_name>  | to remove directory permanently.
+chmod             |to change permission of  file/dir
+ln                | makes link between file.
+df -i             |cm dused to check free/left/unused inode in file system.
+ls -li            |to view inode number.
+_____________________________________________________________________
+_____________________________________________________________________
+                      CHMOD COMMANDS
+                      
+NUMBER  |   OCTAL PERMISION REPRESENTATION   |  REF
+--------|------------------------------------|-------
+ 0      | NO permission                      | ---
+  1     | execute permission                 | --x
+   2    |  write permission                  | -w-
+    3   | execute and write permission       | -wx
+     4  | read permission                    | r--
+      5 | read and execute permission        | r-x
+    6   | read and write permission          | rw-
+     7  | all permission                     | rwx
+__________________________________________________________ 
+----------------------------------------------------------
+
+
+        
