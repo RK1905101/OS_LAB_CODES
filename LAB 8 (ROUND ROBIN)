@@ -1,0 +1,417 @@
+
+#include<stdio.h>
+int main()
+{
+int at[10],bt[10],rt[10],i,ts,at_p[10],pname[10],wt[10];
+int remain=0,n,time,l,count;
+printf("enter the number of process:");
+scanf("%d",&n);
+printf("enter time slice:");
+scanf("%d",&ts);
+for(i=0;i<n;i++)
+{
+printf("\n enter arrival time for process p%d:",i);
+scanf("%d",&at[i]);
+pname[i]=i;
+at_p[i]=at[i];
+printf("\n enter burst time for process p%d:",i);
+scanf("%d",&bt[i]);
+rt[i]=bt[i];
+wt[i]=0;
+}
+printf("\n\n Process\t Arrival Time \t Turn Around Time\t  Waiting Time\t Completion Time\n\n");
+at_p[9]=9999;
+for(time=0;remain!=n;)
+{
+l=9;
+for(i=0;i<n;i++)
+{
+if(rt[i]>0 && at_p[i]<at_p[l])
+l=i;
+}
+if(rt[l]>ts)
+{
+rt[l]=rt[l]-ts;
+wt[l]=wt[l]+time-at_p[l];
+time=time+ts;
+at_p[l]=time;
+}
+else if(rt[l]<=ts)
+{
+wt[l]=wt[l]+time-at_p[l];
+time=rt[l]+time;
+at_p[l]=time;
+rt[l]=0;
+count=1;
+}
+if(rt[l]==0 && count==1)
+{
+printf("\n p[%d]\t %d\t\t %d\t\t %d\t\t %d\t\t %d\t\t",l,at[l],bt[l],wt[l]+bt[l],wt[l],at_p[l] );
+remain++;
+count=0;
+}
+}
+}
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+
+#include<stdio.h>  
+  
+void main()  
+{  
+    int i, NOP, sum=0,count=0, y, quant, wt=0, tat=0, at[10], bt[10], temp[10], at_p[10];  
+    float avg_wt, avg_tat;  
+    printf(" Total number of process in the system: ");  
+    scanf("%d", &NOP);  
+    y = NOP;  
+  
+for(i=0; i<NOP; i++)  
+{  
+printf("\n Enter the Arrival and Burst time of the Process[%d]\n", i+1);  
+printf(" Arrival time:");    
+scanf("%d", &at[i]);  
+printf("\n Burst time:");  
+scanf("%d", &bt[i]);  
+temp[i] = bt[i];
+}  
+printf("Enter the Time Quantum for the process:");  
+scanf("%d", &quant);  
+printf("\n Process Number AT\t BT \t TAT \t WT \n");  
+for(sum=0, i = 0; y!=0; )  
+{  
+if(temp[i] <= quant && temp[i] > 0)    
+{  
+    sum = sum + temp[i];  
+    temp[i] = 0;  
+    count=1;  
+    }     
+    else if(temp[i] > 0)  
+    {  
+        temp[i] = temp[i] - quant;  
+        sum = sum + quant;    
+    }  
+    if(temp[i]==0 && count==1)  
+    {  
+        y--;   
+        printf("\n Process No[%d] \t %d \t %d \t %d \t\ %d ", i+1,at[i], bt[i], sum-at[i], sum-at[i]-bt[i]);  
+        wt = wt+sum-at[i]-bt[i];  
+        tat = tat+sum-at[i];  
+        count =0;     
+    }  
+    if(i==NOP-1)  
+    {  
+        i=0;  
+    }  
+    else if(at[i+1]<=sum)  
+    {  
+        i++;  
+    }  
+    else  
+    {  
+        i=0;  
+    }  
+} 
+avg_wt = wt * 1.0/NOP;  
+avg_tat = tat * 1.0/NOP;  
+printf("\n Average Turn Around Time:%f", avg_wt);  
+printf("\n Average Waiting Time:%f", avg_tat);  
+getch();  
+}  
+
+
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+                         WITH GANTT CHART
+                         
+#include<stdio.h>
+ 
+struct times
+{
+       int p,at,bt,wt,tat,rt;
+};
+ 
+ 
+void sort_at(struct times a[],int pro)
+{
+       int i,j;
+       struct times temp;
+       for(i=0;i<pro;i++)
+       {
+              for(j=i+1;j<pro;j++)
+              {
+                     if(a[i].at > a[j].at)
+                     {
+                           temp = a[i];
+                           a[i] = a[j];
+                           a[j] = temp;
+                     }
+              }
+       }
+       return;
+}
+ 
+int main()
+{
+       int i,j,pro,time,remain,flag=0,ts;
+       struct times a[100];
+       float avgwt=0,avgtt=0;
+       
+
+       printf("Enter Number Of Processes : ");
+       scanf("%d",&pro);
+       remain=pro;
+       for(i=0;i<pro;i++)
+       {
+              printf("Enter arrival time and Burst time for Process P%d:\n ",i);
+              scanf("%d%d",&a[i].at,&a[i].bt);
+              a[i].p = i;
+              a[i].rt = a[i].bt;
+       }
+       sort_at(a,pro);
+       printf("Enter Time Quantum: ");
+       scanf("%d",&ts);
+       printf("\n\n");
+       printf("Gantt Chart\n");
+       printf("0");
+       for(time=0,i=0;remain!=0;)
+       {
+              if(a[i].rt<=ts && a[i].rt>0)
+              {
+                     time = time + a[i].rt;
+                     printf(" -> [P%d] <- %d",a[i].p,time);
+                     a[i].rt=0;
+                     flag=1;
+              }
+              else if(a[i].rt > 0)
+              {
+                     a[i].rt = a[i].rt - ts;
+                     time = time + ts;
+                     printf(" -> [P%d] <- %d",a[i].p,time);
+              }
+              if(a[i].rt==0 && flag==1)
+              {
+                     remain--;
+                     a[i].tat = time-a[i].at;
+                     a[i].wt = time-a[i].at-a[i].bt;
+                     avgwt = avgwt + time-a[i].at-a[i].bt;
+                     avgtt = avgtt + time-a[i].at;
+                     flag=0;
+              }
+              if(i==pro-1)
+                     i=0;
+              else if(a[i+1].at <= time)
+                     i++;
+              else
+                     i=0;
+       }
+       printf("\n\n");
+       
+       printf("PID\tAT\tBT\tTAT\tWT\n");
+      
+       for(i=0;i<pro;i++)
+       {
+              printf("P%d\t%d\t%d\t%d\t%d\n",a[i].p,a[i].at,a[i].bt,a[i].tat,a[i].wt);
+       }
+       
+       avgwt = avgwt/pro;
+       avgtt = avgtt/pro;
+       printf("Average Waiting Time : %.2f\n",avgwt);
+       printf("Average Turnaround Time : %.2f\n",avgtt);
+       return 0;
+}
+
+----------------------------------------------------------------------
+----------------------------------------------------------------------
+
+                      USING LINKED LIST
+                     
+#include<stdio.h>
+#include<stdlib.h>
+struct process
+{
+int pid,at,bt,remt,ct,wt,rt,tat;
+struct process *next;
+}*current;
+void add_process(int p,int a,int b)
+{
+struct process *New=(struct process*)malloc(sizeof(struct process));
+struct process *temp=current;
+New->pid=p;
+New->at=a;
+New->bt=b;
+New->remt=b;
+New->next=NULL;
+if(current==NULL)
+{
+current=New;
+}
+else
+{
+while(temp->next!=NULL)
+{
+temp=temp->next;
+}
+temp->next=New;
+}
+}
+void remove_process(int p){
+struct process *temp=current;
+struct process *prev=current;
+int found=0;
+while(temp!=NULL)
+{
+if(temp->pid==p)
+{
+found=1;
+if(temp==current)
+{
+current=current->next;
+free(temp);
+temp=current;
+}
+else
+{
+prev->next=temp->next;
+free(temp);
+temp=prev;
+}
+}
+prev=temp;
+temp=temp->next;
+}
+if(found==0)
+{
+printf("Process not found\n");
+}
+}
+void display()
+{
+struct process *temp=current;
+printf("PID\tArrival Time\tBurst Time\n");while(temp!=NULL)
+{
+printf("%d\t%d\t%d\n",temp->pid,temp->at,temp->bt);
+temp=temp->next;
+}
+}
+void rr()
+{
+struct process *temp=current;
+struct process *t,*soonest;
+int tp,ta,tb,trem,n=0;
+float awt=0,atat=0;
+int time=0;
+while(temp!=NULL)
+{
+t=temp;
+soonest=temp;
+while(t!=NULL)
+{
+if((t->at)<(soonest->at))
+{
+soonest=t;
+}
+t=t->next;
+}
+tp=temp->pid;
+ta=temp->at;
+tb=temp->bt;
+trem=temp->remt;
+temp->pid=soonest->pid;
+temp->at=soonest->at;
+temp->bt=soonest->bt;
+temp->remt=soonest->remt;
+soonest->pid=tp;soonest->at=ta;
+soonest->bt=tb;
+soonest->remt=trem;
+temp=temp->next;
+}
+printf("PID\tAT\tBT\tCT\tTAT\tWT\tRT\n");
+while(current!=NULL)//removes processes one-by-one, completing rr
+{
+if(current->at <=time)
+{
+if(current->remt == current->bt)
+{
+current->rt=time - current->at;
+}
+(current->remt)--;
+if(current->remt == 0)
+{
+current->ct=time+1;
+current->tat=current->ct - current->at;
+current->wt=current->tat - current->bt;
+atat += current->tat;
+awt += current->wt;
+printf("%d\t%d\t%d\t%d\t%d\t%d\t%d\n",current->pid,current->at,current->b
+t,current->ct,current->tat,current->wt,current->rt);
+temp=current;
+current=current->next;
+free(temp);
+n++;
+}
+else if(current->next->at <= time+1){
+temp=current;
+while(temp->next != NULL)
+{
+temp=temp->next;
+}
+temp->next=current;
+current=current->next;
+temp->next->next = NULL;
+}
+}
+time++;
+}
+atat /= n;
+awt /= n;
+printf("Avg. Waiting Time = %.2f\nAvg. Turnaround Time =
+%.2f\n",awt,atat);
+}
+int main()
+{
+int choice=1,p,a,b;
+while(choice!=0)
+{
+printf("Enter:\n\t1 to add a process to the list\n\t2 to remove a
+process from the list\n\t3 to display process list\n\t4 to start Round-Robin
+schedule\n\t0 to EXIT\n");
+scanf("%d",&choice);
+switch(choice)
+{
+case 1:
+printf("Enter PID : ");
+scanf("%d",&p);printf("Enter Arrival Time : ");
+scanf("%d",&a);
+printf("Enter Burst Time : ");
+scanf("%d",&b);
+printf("\n");
+add_process(p,a,b);
+break;
+case 2:
+printf("Enter PID : ");
+scanf("%d",&p);
+remove_process(p);
+break;
+case 3:
+printf("Current process list is:\n");
+display();
+break;
+case 4:
+printf("Starting RR Schedule:\n");
+rr();
+break;
+case 0:
+printf("EXITING\n");
+break;
+default:
+printf("Invalid Choice\n");
+}
+}
+return 0;
+}
+ 
+ 
+ 
+ 
