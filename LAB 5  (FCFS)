@@ -1,158 +1,169 @@
-3RD MARCH 2021
+FCFS USING LINKED LIST
 
-Question:Write a program in c to schedule cpu using fcfs concept.
-
-CODE:
-
-#include&lt;stdio.h&gt;
-#include&lt;stdlib.h&gt;
+#include<stdio.h>
+#include<stdlib.h>
 struct process
 {
-int pid,at;
+int pid,at,bt,ct,wt,tat;
 struct process *next;
-
 }*current;
-void add_process(int p,int a)
+void add_process(int p,int a,int b)
 {
-struct process New=(struct process)malloc(sizeof(struct
-process));
+struct process *New=(struct process*)malloc(sizeof(struct process));
 struct process *temp=current;
-New-&gt;pid=p;
-New-&gt;at=a;
-New-&gt;next=NULL;
+New->pid=p;
+New->at=a;
+New->bt=b;
+New->next=NULL;
 if(current==NULL)
 {
 current=New;
 }
 else
 {
-while(temp-&gt;next!=NULL)
+while(temp->next!=NULL)
 {
-temp=temp-&gt;next;
+temp=temp->next;
 }
-temp-&gt;next=New;
+temp->next=New;
 }
 }
 void remove_process(int p)
-{
-struct process *temp=current;
+{struct process *temp=current;
 struct process *prev=current;
 int found=0;
 while(temp!=NULL)
 {
-if(temp-&gt;pid==p)
+if(temp->pid==p)
 {
 found=1;
 if(temp==current)
-
 {
-current=current-&gt;next;
+current=current->next;
 free(temp);
 temp=current;
 }
 else
 {
-prev-&gt;next=temp-&gt;next;
+prev->next=temp->next;
 free(temp);
 temp=prev;
 }
 }
 prev=temp;
-temp=temp-&gt;next;
+temp=temp->next;
 }
 if(found==0)
 {
-printf(&quot;Element not found\n&quot;);
+printf("Process not found\n");
 }
 }
 void display()
 {
 struct process *temp=current;
-printf(&quot;PID\tArrival Time\n&quot;);
-while(temp!=NULL)
-{
-printf(&quot;%d\t%d\n&quot;,temp-&gt;pid,temp-&gt;at);
-temp=temp-&gt;next;
+printf("PID\tArrival Time\tBurst Time\n");
+while(temp!=NULL){
+printf("%d\t%d\t%d\n",temp->pid,temp->at,temp->bt);
+temp=temp->next;
 }
 }
 void fcfs()
 {
 struct process *temp=current;
-
 struct process *t,*soonest;
-int tp,ta;
+int tp,ta,tb,n=0;
+float awt=0,atat=0;
+int time=0;
 while(temp!=NULL)
 {
 t=temp;
 soonest=temp;
 while(t!=NULL)
 {
-if((t-&gt;at)&lt;(soonest-&gt;at))
+if((t->at)<(soonest->at))
 {
 soonest=t;
 }
-t=t-&gt;next;
+t=t->next;
 }
-tp=temp-&gt;pid;
-ta=temp-&gt;at;
-temp-&gt;pid=soonest-&gt;pid;
-temp-&gt;at=soonest-&gt;at;
-soonest-&gt;pid=tp;
-soonest-&gt;at=ta;
-temp=temp-&gt;next;
-}
-while(current!=NULL)//removes processes one-by-one,
-completing fcfs
+tp=temp->pid;
+ta=temp->at;
+tb=temp->bt;
+temp->pid=soonest->pid;
+temp->at=soonest->at;
+temp->bt=soonest->bt;
+soonest->pid=tp;
+soonest->at=ta;
+soonest->bt=tb;
+temp=temp->next;}
+printf("PID\tAT\tBT\tCT\tTAT\tWT\n");
+while(current!=NULL)//removes processes one-by-one, completing
+fcfs
 {
-printf(&quot;Process #%d is executing\n&quot;,current-&gt;pid);
+if(current->at <= time)
+{
+time+=current->bt;
+current->ct=time;
+current->tat=(current->ct) - (current->at);
+current->wt=(current->tat) - (current->bt);
+awt += current->wt;
+atat += current->tat;
+n++;
+printf("%d\t%d\t%d\t%d\t%d\t%d\n",current->pid,current->at,current->bt,cur
+rent->ct,current->tat,current->wt);
 temp=current;
-current=current-&gt;next;
+current=current->next;
 free(temp);
 }
-}
-int main()
+else
 {
-int choice=1,p,a;
-
+time++;
+}
+}
+atat /= n;
+awt /= n;
+System.out.println("Avg. Waiting Time = %.2f\nAvg. Turnaround Time
+= %.2f\n",awt,atat);
+}int main()
+{
+int choice=1,p,a,b;
 while(choice!=0)
 {
-printf(&quot;Enter:\n\t1 to add a process to the list\n\t2
-to remove a process from the list\n\t3 to display process
-list\n\t4 to start FCFS schedule\n\t0 to EXIT\n&quot;);
-
-scanf(&quot;%d&quot;,&amp;choice);
+printf("Enter:\n\t1 to add a process to the list\n\t2 to remove a
+process from the list\n\t3 to display process list\n\t4 to start FCFS
+schedule\n\t0 to EXIT\n");
+scanf("%d",&choice);
 switch(choice)
 {
 case 1:
-printf(&quot;Enter PID : &quot;);
-scanf(&quot;%d&quot;,&amp;p);
-printf(&quot;\nEnter Arrival Time : &quot;);
-scanf(&quot;%d&quot;,&amp;a);
-printf(&quot;\n&quot;);
-add_process(p,a);
+printf("Enter PID : ");
+scanf("%d",&p);
+printf("\nEnter Arrival Time : ");
+scanf("%d",&a);
+printf("Enter Burst Time : ");
+scanf("%d",&b);
+printf("\n");
+add_process(p,a,b);
 break;
 case 2:
-printf(&quot;Enter PID : &quot;);
-scanf(&quot;%d&quot;,&amp;p);
-printf(&quot;\n&quot;);
+printf("Enter PID : ");
+scanf("%d",&p);
+printf("\n");
 remove_process(p);
 break;
 case 3:
-printf(&quot;Current process list is:\n&quot;);
+printf("Current process list is:\n");
 display();
 break;
 case 4:
-printf(&quot;Starting FCFS :\n&quot;);
-fcfs();
-break;
+printf("Starting FCFS :\n");
+fcfs();break;
 case 0:
-printf(&quot;EXITING\n&quot;);
+printf("EXITING\n");
 break;
 default:
-printf(&quot;Invalid Choice\n&quot;);
-
+printf("Invalid Choice\n");
 }
 }
 return 0;
 }
-_________________________
